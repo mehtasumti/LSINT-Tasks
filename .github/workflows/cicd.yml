@@ -1,0 +1,68 @@
+name: CI/CD
+
+on:
+  push:
+    branches: ["**"]    # run on any branch push
+  pull_request:          # run on PRs
+  workflow_dispatch:     # allow manual runs
+
+concurrency:
+  group: build-and-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_TAG: ${{ github.sha }}
+      BACKEND_REPO: ${{ secrets.BACKEND_REPO != '' && secrets.BACKEND_REPO || 'mehtasumti/lsint-backend' }}
+      FRONTEND_REPO: ${{ secrets.FRONTEND_REPO != '' && secrets.FRONTEND_REPO || 'mehtasumti/lsint-frontend' }}
+
+    steps:
+      - name: Checkout LSINT-Task
+        uses: actions/checkout@v4
+
+      - name: Checkout backend repo
+        uses: actions/checkout@v4
+        with:
+          repository: mehtasumti/LSINT-Backend
+          path: LSINT-Backend
+
+      - name: Checkout frontend repo
+        uses: actions/checkout@v4
+        with:
+          repository: mehtasumti/LSINT-Frontend
+          path: LSINT-Frontend
+
+      - name: Docker login (Docker Hub)
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & push backend
+        working-directory: ./LSINT-Backend
+        run: |
+          docker build -f Dockerfile -t $BACKEND_REPO:latest -t $BACKEND_REPO:$IMAGE_TAG .
+          docker push $BACKEND_REPO:latest
+          docker push $BACKEND_REPO:$IMAGE_TAG
+
+      - name: Build & push frontend
+        working-directory: ./LSINT-Frontend
+        run: |
+          docker build -f Dockerfile \
+            --build-arg NEXT_PUBLIC_API_URL=http://63.179.148.174:5000/api \
+            -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
+          docker push $FRONTEND_REPO:latest
+          docker push $FRONTEND_REPO:$IMAGE_TAG
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/LSINT-Task
+            sudo docker compose pull
+            sudo docker compose up -d
