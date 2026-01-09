@@ -51,7 +51,11 @@ jobs:
         working-directory: ./LSINT-Frontend
         run: |
           docker build -f Dockerfile \
+<<<<<<< HEAD
             --build-arg NEXT_PUBLIC_API_URL=http://35.159.116.110:5000/api \
+=======
+            --build-arg NEXT_PUBLIC_API_URL=http://63.179.148.174:5000/api \
+>>>>>>> c6383fe95cd79d72aec43dd4a3174f0334c594b9
             -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
           docker push $FRONTEND_REPO:latest
           docker push $FRONTEND_REPO:$IMAGE_TAG
