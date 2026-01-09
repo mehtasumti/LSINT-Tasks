@@ -1,4 +1,5 @@
 name: CI/CD
+
 on:
   push:
     branches: [main]
@@ -12,8 +13,23 @@ jobs:
       FRONTEND_REPO: ${{ secrets.FRONTEND_REPO }}
 
     steps:
-      - name: Checkout
+      # Checkout this repo (optional but harmless)
+      - name: Checkout LSINT-Task
         uses: actions/checkout@v4
+
+      # Checkout backend repo into a folder
+      - name: Checkout backend repo
+        uses: actions/checkout@v4
+        with:
+          repository: mehtasumti/LSINT-Backend
+          path: LSINT-Backend
+
+      # Checkout frontend repo into a folder
+      - name: Checkout frontend repo
+        uses: actions/checkout@v4
+        with:
+          repository: mehtasumti/LSINT-Frontend
+          path: LSINT-Frontend
 
       - name: Docker login (Docker Hub)
         uses: docker/login-action@v3
@@ -22,14 +38,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build & push backend
-        working-directory: LSINT-Backend
+        working-directory: ./LSINT-Backend
         run: |
           docker build -t $BACKEND_REPO:latest -t $BACKEND_REPO:$IMAGE_TAG .
           docker push $BACKEND_REPO:latest
           docker push $BACKEND_REPO:$IMAGE_TAG
 
       - name: Build & push frontend
-        working-directory: LSINT-Frontend
+        working-directory: ./LSINT-Frontend
         run: |
           docker build -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
           docker push $FRONTEND_REPO:latest
