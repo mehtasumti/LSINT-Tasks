@@ -1,5 +1,4 @@
 name: CI/CD
-
 on:
   push:
     branches: [main]
@@ -9,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGE_TAG: ${{ github.sha }}
-      BACKEND_REPO: ${{ secrets.BACKEND_REPO != '' && secrets.BACKEND_REPO || format('{0}/lsint-backend', secrets.DOCKERHUB_USERNAME) }}
-      FRONTEND_REPO: ${{ secrets.FRONTEND_REPO != '' && secrets.FRONTEND_REPO || format('{0}/lsint-frontend', secrets.DOCKERHUB_USERNAME) }}
+      BACKEND_REPO: ${{ secrets.BACKEND_REPO }}
+      FRONTEND_REPO: ${{ secrets.FRONTEND_REPO }}
 
     steps:
       - name: Checkout
