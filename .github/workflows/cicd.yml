@@ -44,7 +44,9 @@ jobs:
       - name: Build & push frontend
         working-directory: ./LSINT-Frontend
         run: |
-          docker build -f Dockerfile -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
+          docker build -f Dockerfile \
+            --build-arg NEXT_PUBLIC_API_URL=http://35.159.116.110:5000/api \
+            -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
           docker push $FRONTEND_REPO:latest
           docker push $FRONTEND_REPO:$IMAGE_TAG
 
