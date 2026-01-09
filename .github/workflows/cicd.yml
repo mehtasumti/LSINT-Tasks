@@ -37,14 +37,14 @@ jobs:
       - name: Build & push backend
         working-directory: ./LSINT-Backend
         run: |
-          docker build -f dockerfile -t $BACKEND_REPO:latest -t $BACKEND_REPO:$IMAGE_TAG .
+          docker build -f Dockerfile -t $BACKEND_REPO:latest -t $BACKEND_REPO:$IMAGE_TAG .
           docker push $BACKEND_REPO:latest
           docker push $BACKEND_REPO:$IMAGE_TAG
 
       - name: Build & push frontend
         working-directory: ./LSINT-Frontend
         run: |
-          docker build -f dockerfile -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
+          docker build -f Dockerfile -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
           docker push $FRONTEND_REPO:latest
           docker push $FRONTEND_REPO:$IMAGE_TAG
 
