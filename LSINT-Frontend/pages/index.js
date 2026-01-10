@@ -50,8 +50,13 @@ export default function Home() {
           <h3>GitHub Actions Sumti</h3>
           <p>Testing this for GitHub Actions using for Interview Test</p>
         </div>
+        <div className={styles.featureCard}>
+          <h3>Test 2</h3>
+          <p>Testing this for GitHub Actions using for Interview Test</p>
+        </div>
       </div>
     </div>
   );
 }
+
 
