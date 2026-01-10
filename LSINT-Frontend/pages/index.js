@@ -48,9 +48,10 @@ export default function Home() {
         </div>
         <div className={styles.featureCard}>
           <h3>GitHub Actions Sumti</h3>
-          <p>Testing this for GitHub Actions using for Interview</p>
+          <p>Testing this for GitHub Actions using for Interview Test</p>
         </div>
       </div>
     </div>
   );
 }
+
