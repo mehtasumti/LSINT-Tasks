@@ -2,9 +2,9 @@ name: CI/CD
 
 on:
   push:
-    branches: ["**"]    # run on any branch push
-  pull_request:          # run on PRs
-  workflow_dispatch:     # allow manual runs
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: build-and-deploy-${{ github.ref }}
@@ -19,7 +19,7 @@ jobs:
       FRONTEND_REPO: ${{ secrets.FRONTEND_REPO != '' && secrets.FRONTEND_REPO || 'mehtasumti/lsint-frontend' }}
 
     steps:
-      - name: Checkout LSINT-Task
+      - name: Checkout LSINT-Tasks
         uses: actions/checkout@v4
 
       - name: Checkout backend repo
@@ -51,11 +51,7 @@ jobs:
         working-directory: ./LSINT-Frontend
         run: |
           docker build -f Dockerfile \
-<<<<<<< HEAD
-            --build-arg NEXT_PUBLIC_API_URL=http://35.159.116.110:5000/api \
-=======
             --build-arg NEXT_PUBLIC_API_URL=http://63.179.148.174:5000/api \
->>>>>>> c6383fe95cd79d72aec43dd4a3174f0334c594b9
             -t $FRONTEND_REPO:latest -t $FRONTEND_REPO:$IMAGE_TAG .
           docker push $FRONTEND_REPO:latest
           docker push $FRONTEND_REPO:$IMAGE_TAG
