@@ -25,13 +25,19 @@ jobs:
       - name: Checkout backend repo
         uses: actions/checkout@v4
         with:
+          # Testing with your fork:
           repository: mehtasumti/LSINT-Backend
+          # Production: switch to original repo
+          # repository: Listandsell2021/LSINT-Backend
           path: LSINT-Backend
 
       - name: Checkout frontend repo
         uses: actions/checkout@v4
         with:
+          # Testing with your fork:
           repository: mehtasumti/LSINT-Frontend
+          # Production: switch to original repo
+          # repository: Listandsell2021/LSINT-Frontend
           path: LSINT-Frontend
 
       - name: Docker login (Docker Hub)
